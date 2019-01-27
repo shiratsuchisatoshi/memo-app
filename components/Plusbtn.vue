@@ -1,37 +1,39 @@
 <template>
-  <div class="plusbtn" @click="$emit('plus')">
-    +
+  <div
+    class="btn"
+    @click="$emit('plus')">
+    <span>+</span>
   </div>
 </template>
 
+<script>
+export default {
+
+}
+</script>
+
 <style>
-/* .plusbtn {
-   position: absolute;
-   bottom: 10px;
-   right: 10px;
-   width: 50px;
-   height: 50px;
-   background: white;
-   border-radius: 50px;
-   font-size: 30px;
-   cursor: pointer;
-} */
-.plusbtn {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: white;
-  border-radius: 50px;
-  font-size: 30px;
-  text-decoration: none;
-  font-weight: bold;
-  padding: 10px 20px;
-  border-bottom: 4px solid white;
+.btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: #666 2px solid;
+  width: 60px;
+  height: 60px;
+  text-align: center;
   cursor: pointer;
+  transition: 0.2s;
 }
 
-.plusbtn:active {
-    transform: translateY(4px);
-    border-bottom: none;
+.btn:hover {
+  transform: scale(1.1);
+}
+
+.btn > span {
+  font-size: 50px;
+  display: inline-block;
+  margin-top: -10px;
 }
 </style>

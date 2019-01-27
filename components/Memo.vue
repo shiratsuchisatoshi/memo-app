@@ -1,44 +1,22 @@
 <template>
+
   <div
-    class="memo"
+  class="memo"
     :style="{
-      top:`${top}px`,
-      left:`${left}px`,
-      background:`${background}`
-    }"
-  >
-    <div class="tab" @mousedown="$emit('start',index)" />
-    <span class="close" @click="$emit('minus',index)">
-      X
-    </span>
+      top: `${toppo}px`,
+      left: `${left}px`
+    }">
+    <div class="handle" @mousedown="onMousedown" />
+  <editor :index="index" />
 
-    <textarea v-model="text" class="textzone"  @keyup.enter="setItems"></textarea>
-
-    <ul class="endtab">
-      <li class="end1" @click="$emit('changeColor1')" />
-      <li class="end2" @click="$emit('changeColor2')" />
-      <li class="end3" @click="$emit('changeColor3')" />
-    </ul>
   </div>
-  <!-- <div
-    class="memo"
-    :style="{
-      top:`${top}px`,
-      left:`${left}px`
-    }"
-    @click="$emit('minus',index)" /> -->
-  <!-- マイナスの跡にindexと引数を書いても大丈夫。
-    複数の引数を指定するときは 連想配列で渡す。-->
 </template>
 
 <script>
+import Editor from '~/components/Editor'
 export default {
   props: {
-    index: {
-      type: Number,
-      default: 0
-    },
-    top: {
+    toppo: {
       type: Number,
       default: 0
     },
@@ -46,19 +24,20 @@ export default {
       type: Number,
       default: 0
     },
-    background: {
-      type: String,
-      default: null
+    index: {
+      type: Number,
+      default: 0
     }
   },
-  data() {
-    return {
-      message: this.text
-    }
+  components: {
+    Editor
   },
   methods: {
-    setItems(index) {
-      localStorage.setItem('memo' + index, this.text)
+    onMousedown(e) {
+      this.$emit('dragStart', {
+        x: e.pageX,
+        y: e.pageY
+      })
     }
   }
 }
@@ -66,80 +45,19 @@ export default {
 
 <style>
 .memo {
-  position:fixed;
-   width: 200px;
-   height: 300px;
+  position: fixed;
+  background: #f00;
+  width: 200px;
+  height: 300px;
 }
 
-.tab {
-  width: 100%;
-  height: 50px;
-  background: rgba(0, 0, 0, 0.5);
-  cursor: move;
+.handle{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:50px;
+  background: #900;
+  cursor:move;
 }
-
-.close {
-  position: absolute;
-  color:white;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.close:active {
-    transform: translateY(4px);
-    border-bottom: none;
-}
-
-.close:hover {
-  opacity: 1;
-}
-
-.textzone {
-  width: 100%;
-  height: 199px;
-  resize: none;
-  background: transparent;
-  font-size: 20px;
-  border: none;
-  outline: none;
-}
-
-.endtab {
-  display: flex;
-}
-
-.endtab li {
-  width: calc(100% / 3);
-}
-
-ul,
-li {
-  padding-left: 0;
-  margin-top: 0;
-  margin-bottom: 0;
-  list-style: none;
-}
-
- li {
-  padding: 20px 0;
-  border: 3px solid #fff;
-}
-
-.end1 {
-   background: pink;
-   cursor: pointer;
-}
-
-.end2 {
-   background: lightgreen;
-   cursor: pointer;
-}
-
-.end3 {
-   background: lightblue;
-   cursor: pointer;
-}
-
 </style>

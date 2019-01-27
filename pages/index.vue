@@ -1,111 +1,75 @@
 <template>
   <section
     class="container"
-    @mousemove="moving"
-    @mouseup="moveEnd"
-  >
+    @mousemove="onMousemove"
+    @mouseup="onMouseup">
     <memo
-      v-for="(position, index) in memoPositions"
+      v-for="(mm, index) in $store.state.memoList"
       :key="index"
-      :top="position.top"
-      :left="position.left"
-      :background="position.background"
-      @start="moveStart(index)"
-      @minus="minusMemo(index)"
-      @changeColor1="changeColor1(index)"
-      @changeColor2="changeColor2(index)"
-      @changeColor3="changeColor3(index)"
-      @strage="setItems(index)"
-    />
-    <plusbtn @plus="plusMemo" />
+      :toppo="mm.toppo"
+      :left="mm.left"
+      :index="index"
+      @dragStart="onDragStart($event, index)"
+      @minus="minusMemo"/>
+    <plus-btn @plus="plusMemo"/>
   </section>
 </template>
 
 <script>
-// import Logo from '~/components/Logo.vue'
 import Memo from '~/components/Memo.vue'
-import Plusbtn from '~/components/Plusbtn.vue'
+import PlusBtn from '~/components/PlusBtn.vue'
 
 export default {
   components: {
     Memo,
-    Plusbtn
+    PlusBtn
   },
   data() {
     return {
-      memoPositions: [
-        // { top: 100, left: 0 },
-        // { top: 100, left: 250 },
-        // { top: 100, left: 500 }
-      ],
-      catchId: null,
-      colorBox: ['pink', 'lightgreen', 'lightblue']
-      // contents: []
+      draggingIndex: null,
+      prevX: null,
+      prevY: null
+
     }
   },
   methods: {
     plusMemo() {
       const widthCount = Math.floor(window.innerWidth / 250)
-
-      this.memoPositions = [
-        ...this.memoPositions,
-        {
-          top: Math.floor(this.memoPositions.length / widthCount) * 350,
-          left: (this.memoPositions.length % widthCount) * 250,
-          background: this.colorBox[ Math.floor(Math.random() * this.colorBox.length) ]
-        }
-      ]
-      // Math.floor(Math.random() * this.memoPositions.length)
+      this.$store.commit('addMemo', {
+        toppo: Math.floor(this.$store.state.memoList.length / widthCount) * 350,
+        left: (this.$store.state.memoList.length % widthCount) * 250,
+        text: ''
+      })
     },
     minusMemo(index) {
-      this.memoPositions = [
-        ...this.memoPositions ]
+      this.memoPositions = [...this.memoPositions]
       this.memoPositions.splice(index, 1)
     },
-    moveStart(index) {
-      this.catchId = index
-      this.prevX = event.pageX
-      this.prevY = event.pageY
+    onDragStart({ x, y }, index) {
+      this.draggingIndex = index
+      this.prevX = x
+      this.prevY = y
     },
-    moveEnd() {
-      this.catchId = null
-    },
-    moving(e) {
-      const catchId = this.catchId
-      const prevX = this.prevX
-      const prevY = this.prevY
-      if (catchId === null) return
+    onMousemove(e) {
+      if (this.draggingIndex === null) return
 
       const x = e.pageX
       const y = e.pageY
-      // console.log(x, y)
+      const target = { ...this.memoPositions[this.draggingIndex] }
+      target.left += x - this.prevX
+      target.toppo += y - this.prevY
 
-      this.memoPositions = [
-        ...this.memoPositions ]
-      this.memoPositions[catchId].top += y - prevY
-      this.memoPositions[catchId].left += x - prevX
+      this.memoPositions = [...this.memoPositions]
+      this.memoPositions[this.draggingIndex] = target
 
       this.prevX = x
       this.prevY = y
     },
-    changeColor1(index) {
-      this.memoPositions = [
-        ...this.memoPositions ]
-      this.memoPositions[index].background = this.colorBox[0]
-    },
-    changeColor2(index) {
-      this.memoPositions = [
-        ...this.memoPositions ]
-      this.memoPositions[index].background = this.colorBox[1]
-    },
-    changeColor3(index) {
-      this.memoPositions = [
-        ...this.memoPositions ]
-      this.memoPositions[index].background = this.colorBox[2]
+    onMouseup() {
+      this.draggingIndex = null
     }
   }
 }
-
 </script>
 
 <style>
@@ -117,6 +81,28 @@ export default {
   align-items: center;
   text-align: center;
   background: url('../assets/back.jpg');
+  user-select: none;
 }
 
+.title {
+  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  display: block;
+  font-weight: 300;
+  font-size: 100px;
+  color: #35495e;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-weight: 300;
+  font-size: 42px;
+  color: #526488;
+  word-spacing: 5px;
+  padding-bottom: 15px;
+}
+
+.links {
+  padding-top: 15px;
+}
 </style>
