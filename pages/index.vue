@@ -2,27 +2,36 @@
   <section
     class="container"
     @mousemove="onMousemove"
-    @mouseup="onMouseup">
+    @mouseup="onMouseup"
+  >
     <memo
       v-for="(mm, index) in $store.state.memoList"
       :key="index"
       :toppo="mm.toppo"
       :left="mm.left"
       :index="index"
+      :background="mm.background"
       @dragStart="onDragStart($event, index)"
-      @minus="minusMemo"/>
-    <plus-btn @plus="plusMemo"/>
+    />
+    <plus-btn
+      @plus="plusMemo"
+    />
+    <remove-btn
+      @remove="removeMemo"
+    />
   </section>
 </template>
 
 <script>
 import Memo from '~/components/Memo.vue'
 import PlusBtn from '~/components/PlusBtn.vue'
+import RemoveBtn from '~/components/RemoveBtn.vue'
 
 export default {
   components: {
     Memo,
-    PlusBtn
+    PlusBtn,
+    RemoveBtn
   },
   data() {
     return {
@@ -38,12 +47,13 @@ export default {
       this.$store.commit('addMemo', {
         toppo: Math.floor(this.$store.state.memoList.length / widthCount) * 350,
         left: (this.$store.state.memoList.length % widthCount) * 250,
-        text: ''
+        text: '',
+        background: this.$store.state.colorBox[ Math.floor(Math.random() * this.$store.state.colorBox.length) ]
       })
     },
-    minusMemo(index) {
-      this.memoPositions = [...this.memoPositions]
-      this.memoPositions.splice(index, 1)
+    removeMemo() {
+      localStorage.clear()
+      location.reload()
     },
     onDragStart({ x, y }, index) {
       this.draggingIndex = index
@@ -55,15 +65,19 @@ export default {
 
       const x = e.pageX
       const y = e.pageY
-      const target = { ...this.memoPositions[this.draggingIndex] }
+
+      const target = { ...this.$store.getters.memoData(this.draggingIndex) }
+      // console.log(target)
       target.left += x - this.prevX
       target.toppo += y - this.prevY
 
-      this.memoPositions = [...this.memoPositions]
-      this.memoPositions[this.draggingIndex] = target
-
       this.prevX = x
       this.prevY = y
+
+      this.$store.commit('updateMemoposition', {
+        index: this.draggingIndex,
+        target: target
+      })
     },
     onMouseup() {
       this.draggingIndex = null

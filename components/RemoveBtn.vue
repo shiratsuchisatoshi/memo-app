@@ -1,9 +1,9 @@
 <template>
   <div
-    class="btn"
-    @click="$emit('plus')"
+    class="removebtn"
+    @click="$emit('remove')"
   >
-    <span>+</span>
+    <span>×</span>
   </div>
 </template>
 
@@ -14,13 +14,13 @@ export default {
 </script>
 
 <style>
-.btn {
+.removebtn {
   position: fixed;
-  bottom: 20px;
+  top: 20px;
   right: 20px;
   border-radius: 50%;
-  background: #fff;
-  border: #666 2px solid;
+  background:red;
+  border: red 2px solid;
   width: 60px;
   height: 60px;
   text-align: center;
@@ -28,11 +28,11 @@ export default {
   transition: 0.2s;
 }
 
-.btn:hover {
+.removebtn:hover {
   transform: scale(1.1);
 }
 
-.btn > span {
+.removebtn > span {
   font-size: 50px;
   display: inline-block;
   margin-top: -10px;

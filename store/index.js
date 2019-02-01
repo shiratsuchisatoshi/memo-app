@@ -2,15 +2,13 @@ const STORAGE_NAME = 'vuex_data'
 const storageDate = localStorage.getItem(STORAGE_NAME)
 
 export const state = () => storageDate ? JSON.parse(storageDate) : {
-  memoList: []
+  memoList: [],
+  colorBox: ['pink', 'lightblue', 'lightgreen']
 }
-
-// export const state = () => ({
-//   memoList: []
-// })
 
 export const getters = {
   memoData(state) {
+    console.log('test', state)
     return index => state.memoList[index]
   }
 }
@@ -30,11 +28,26 @@ export const mutations = {
       memo
     ]
   },
+  changeColor(state, colorfooter) {
+    // console.log('colorfooter', colorfooter)
+    state.memoList = [...state.memoList]
+    state.memoList[colorfooter.id].background = state.colorBox[colorfooter.footerNum]
+  },
+  minusMemo(state, index) {
+    // console.log('a', index)
+    // console.log('b', state.memoList)
+    state.memoList = [...state.memoList]
+    state.memoList.splice(index, 1)
+  },
   updateText(state, { index, text }) {
     state.memoList = [...state.memoList]
     state.memoList[index] = {
       ...state.memoList[index],
       text
     }
+  },
+  updateMemoposition(state, { index, target }) {
+    state.memoList = [...state.memoList]
+    state.memoList[index] = target
   }
 }

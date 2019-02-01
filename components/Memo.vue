@@ -1,20 +1,30 @@
 <template>
-
   <div
-  class="memo"
+    class="memo"
     :style="{
       top: `${toppo}px`,
-      left: `${left}px`
-    }">
+      left: `${left}px`,
+      background:`${background}`
+    }"
+  >
     <div class="handle" @mousedown="onMousedown" />
-  <editor :index="index" />
-
+    <span class="close" :index="index" @click="minus">
+      X
+    </span>
+    <editor :index="index" />
+    <colorFooter :index="index" />
   </div>
 </template>
 
 <script>
 import Editor from '~/components/Editor'
+import ColorFooter from '~/components/ColorFooter'
+
 export default {
+  components: {
+    Editor,
+    ColorFooter
+  },
   props: {
     toppo: {
       type: Number,
@@ -27,10 +37,11 @@ export default {
     index: {
       type: Number,
       default: 0
+    },
+    background: {
+      type: String,
+      default: null
     }
-  },
-  components: {
-    Editor
   },
   methods: {
     onMousedown(e) {
@@ -38,6 +49,9 @@ export default {
         x: e.pageX,
         y: e.pageY
       })
+    },
+    minus() {
+      this.$store.commit('minusMemo', this.index)
     }
   }
 }
@@ -46,18 +60,78 @@ export default {
 <style>
 .memo {
   position: fixed;
-  background: #f00;
+  /* background: #f00; */
   width: 200px;
   height: 300px;
 }
 
 .handle{
-  position:absolute;
+  /* position:absolute; */
   top:0;
   left:0;
   right:0;
   height:50px;
-  background: #900;
+  background: rgba(0, 0, 0, 0.5);
   cursor:move;
 }
+
+.close {
+  position: absolute;
+  color:white;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.close:active {
+    transform: translateY(4px);
+    border-bottom: none;
+}
+
+.close:hover {
+  opacity: 1;
+}
+
+.endtab {
+  display: flex;
+  /* top:0;
+  left:0;
+  right:0; */
+  /* bottom: 150; */
+  height:50px;
+}
+
+.endtab li {
+  width: calc(100% / 3);
+}
+
+ul,
+li {
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+
+ li {
+  padding: 20px 0;
+  border: 3px solid #fff;
+}
+
+.end1 {
+   background: pink;
+   cursor: pointer;
+}
+
+.end2 {
+   background: lightgreen;
+   cursor: pointer;
+}
+
+.end3 {
+   background: lightblue;
+   cursor: pointer;
+}
+
 </style>
