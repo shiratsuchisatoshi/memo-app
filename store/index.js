@@ -49,5 +49,10 @@ export const mutations = {
   updateMemoposition(state, { index, target }) {
     state.memoList = [...state.memoList]
     state.memoList[index] = target
+  },
+  zindexPlus(state, { index, memoData }) {
+    console.log('zindexPlus', memoData)
+    state.memoList = [...state.memoList]
+    state.memoList[index].zindex = memoData
   }
 }

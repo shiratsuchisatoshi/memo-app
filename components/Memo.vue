@@ -1,11 +1,13 @@
 <template>
   <div
     class="memo"
-    :style="{
-      top: `${toppo}px`,
-      left: `${left}px`,
-      background:`${background}`
-    }"
+     :style="`
+      top: ${toppo}px;
+      left: ${left}px;
+      z-index: ${zindex};
+      background: ${background};
+    `"
+    @mousedown="zindexPlus"
   >
     <div class="handle" @mousedown="onMousedown" />
     <span class="close" :index="index" @click="minus">
@@ -41,6 +43,10 @@ export default {
     background: {
       type: String,
       default: null
+    },
+    zindex: {
+      type: Number,
+      default: 0
     }
   },
   methods: {
@@ -52,6 +58,24 @@ export default {
     },
     minus() {
       this.$store.commit('minusMemo', this.index)
+    },
+    zindexPlus() {
+      const zindexBox = []
+      for (let i = 0; i < this.$store.state.memoList.length; i++) {
+        zindexBox.push(this.$store.state.memoList[i].zindex)
+      }
+
+      const zindexMax = Math.max(...zindexBox)
+      // const targetId = this.index
+      const memoData = {
+        ...this.$store.getters.memoData(this.index)
+      }
+      memoData.zindex = zindexMax + 1
+      console.log(memoData)
+      this.$store.commit('zindexPlus', {
+        index: this.index,
+        memoData: memoData.zindex
+      })
     }
   }
 }

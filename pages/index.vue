@@ -10,6 +10,7 @@
       :toppo="mm.toppo"
       :left="mm.left"
       :index="index"
+      :zindex="mm.zindex"
       :background="mm.background"
       @dragStart="onDragStart($event, index)"
     />
@@ -48,7 +49,8 @@ export default {
         toppo: Math.floor(this.$store.state.memoList.length / widthCount) * 350,
         left: (this.$store.state.memoList.length % widthCount) * 250,
         text: '',
-        background: this.$store.state.colorBox[ Math.floor(Math.random() * this.$store.state.colorBox.length) ]
+        background: this.$store.state.colorBox[ Math.floor(Math.random() * this.$store.state.colorBox.length) ],
+        zindex: 0
       })
     },
     removeMemo() {
@@ -57,6 +59,7 @@ export default {
     },
     onDragStart({ x, y }, index) {
       this.draggingIndex = index
+      this.mouseindex = index
       this.prevX = x
       this.prevY = y
     },
@@ -70,7 +73,8 @@ export default {
       // console.log(target)
       target.left += x - this.prevX
       target.toppo += y - this.prevY
-
+      target.zindex += 1
+      // console.log('z1', target.zindex)
       this.prevX = x
       this.prevY = y
 
@@ -80,7 +84,11 @@ export default {
       })
     },
     onMouseup() {
+      // console.log('z1', this.zindex)
       this.draggingIndex = null
+      // // this.zindex = 0
+      // // console.log('z1', this.zindex)
+      // this.$store.commit('updatezindex', this.mouseindex)
     }
   }
 }
