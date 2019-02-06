@@ -29,13 +29,10 @@ export const mutations = {
     ]
   },
   changeColor(state, colorfooter) {
-    // console.log('colorfooter', colorfooter)
     state.memoList = [...state.memoList]
     state.memoList[colorfooter.id].background = state.colorBox[colorfooter.footerNum]
   },
   minusMemo(state, index) {
-    // console.log('a', index)
-    // console.log('b', state.memoList)
     state.memoList = [...state.memoList]
     state.memoList.splice(index, 1)
   },
@@ -51,8 +48,12 @@ export const mutations = {
     state.memoList[index] = target
   },
   zindexPlus(state, { index, memoData }) {
-    console.log('zindexPlus', memoData)
     state.memoList = [...state.memoList]
     state.memoList[index].zindex = memoData
+  },
+  lineUpMemo(state, { index, toppo, left }) {
+    state.memoList = [...state.memoList]
+    state.memoList[index].left = left
+    state.memoList[index].toppo = toppo
   }
 }

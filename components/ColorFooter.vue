@@ -46,8 +46,8 @@ li {
 }
 
 li {
-  padding: 20px 0;
-  border: 3px solid #fff;
+  padding: 20px;
+  border: 3px solid white;
 }
 
 </style>

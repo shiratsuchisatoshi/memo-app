@@ -14,7 +14,7 @@ export default {
 </script>
 
 <style>
-.btn {
+/* .btn {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -35,6 +35,6 @@ export default {
 .btn > span {
   font-size: 50px;
   display: inline-block;
-  margin-top: -10px;
-}
+  margin-top: -10px; */
+/* } */
 </style>

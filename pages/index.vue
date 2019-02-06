@@ -1,8 +1,11 @@
 <template>
   <section
     class="container"
+    onContextmenu="return false;"
     @mousemove="onMousemove"
     @mouseup="onMouseup"
+    @mousedown="rightClick"
+    @keyup.enter="keydown"
   >
     <memo
       v-for="(mm, index) in $store.state.memoList"
@@ -14,25 +17,35 @@
       :background="mm.background"
       @dragStart="onDragStart($event, index)"
     />
-    <plus-btn
+
+    <counterBox
       @plus="plusMemo"
     />
-    <remove-btn
-      @remove="removeMemo"
+    <Menu
+      @changeWall="changeWall"
+    />
+
+    <BoardMenu
+      @changeWall="changeWall"
     />
   </section>
 </template>
 
 <script>
 import Memo from '~/components/Memo.vue'
-import PlusBtn from '~/components/PlusBtn.vue'
-import RemoveBtn from '~/components/RemoveBtn.vue'
+// import PlusBtn from '~/components/PlusBtn.vue'
+import CounterBox from '~/components/CounterBox.vue'
+import Menu from '~/components/Menu.vue'
+import BoardMenu from '~/components/BoardMenu.vue'
 
 export default {
   components: {
     Memo,
-    PlusBtn,
-    RemoveBtn
+    // PlusBtn,
+    // RemoveBtn,
+    CounterBox,
+    Menu,
+    BoardMenu
   },
   data() {
     return {
@@ -44,18 +57,18 @@ export default {
   },
   methods: {
     plusMemo() {
+      const val = document.getElementById('input').value
       const widthCount = Math.floor(window.innerWidth / 250)
-      this.$store.commit('addMemo', {
-        toppo: Math.floor(this.$store.state.memoList.length / widthCount) * 350,
-        left: (this.$store.state.memoList.length % widthCount) * 250,
-        text: '',
-        background: this.$store.state.colorBox[ Math.floor(Math.random() * this.$store.state.colorBox.length) ],
-        zindex: 0
-      })
-    },
-    removeMemo() {
-      localStorage.clear()
-      location.reload()
+
+      for (let i = 0; i < val; i++) {
+        this.$store.commit('addMemo', {
+          toppo: Math.floor(this.$store.state.memoList.length / widthCount) * 350,
+          left: (this.$store.state.memoList.length % widthCount) * 250,
+          text: '',
+          background: this.$store.state.colorBox[ Math.floor(Math.random() * this.$store.state.colorBox.length) ],
+          zindex: 0
+        })
+      }
     },
     onDragStart({ x, y }, index) {
       this.draggingIndex = index
@@ -89,6 +102,35 @@ export default {
       // // this.zindex = 0
       // // console.log('z1', this.zindex)
       // this.$store.commit('updatezindex', this.mouseindex)
+    },
+    rightClick(e) {
+      switch (e.which) {
+        case 3: // 3は右クリック
+          const myContextMenu = document.getElementById('js-contextmenu')
+          document.body.addEventListener('contextmenu', function (e) {
+            const posX = e.pageX
+            const posY = e.pageY
+            myContextMenu.style.left = posX + 'px'
+            myContextMenu.style.top = posY + 'px'
+            myContextMenu.classList.add('show')
+          })
+          document.body.addEventListener('click', function () {
+            if (myContextMenu.classList.contains('show')) {
+              myContextMenu.classList.remove('show')
+            }
+          })
+          break
+      }
+    },
+    changeWall() {
+      const urls = '../assets/1.jpg'
+      const style = document.styleSheets[9]
+      style.insertRule('.container {background:url(' + urls + ')}', 4)
+      console.log(style)
+      // style.insertRule("background: url('../assets/1.jpg')", 0)
+    },
+    keydown(e) {
+      alert(e)
     }
   }
 }
